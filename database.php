@@ -1,14 +1,8 @@
 <?php
-
 class DatabaseConnection {
-    private $host;
-    private $username;
-    private $password;
-    private $database;
-    private $charset;
-    private $pdo;
+    private static $pdo = null;
 
-    public function __construct(
+    public static function connect(
         $host,
         $username,
         $password,
@@ -20,29 +14,18 @@ class DatabaseConnection {
             // Add more attributes with default values here if needed
         ]
     ) {
-        $this->host = $host;
-        $this->username = $username;
-        $this->password = $password;
-        $this->database = $database;
-        $this->charset = empty($charset) ? 'utf8' : $charset;
-
-        $this->connect($driverOptions);
-    }
-
-    private function connect($driverOptions) {
-        try {
-            $dsn = "mysql:host={$this->host};dbname={$this->database};charset={$this->charset}";
-            $this->pdo = new PDO($dsn, $this->username, $this->password, $driverOptions);
-        } catch (PDOException $e) {
-            die("Connection failed: " . $e->getMessage());
+        if (self::$pdo === null) {
+            try {
+                $dsn = "mysql:host={$host};dbname={$database};charset={$charset}";
+                self::$pdo = new PDO($dsn, $username, $password, $driverOptions);
+            } catch (PDOException $e) {
+                die("Connection failed: " . $e->getMessage());
+            }
         }
-    }
 
-    public static function getPDO() {
-        return $this->pdo;
+        return self::$pdo;
     }
 }
-
 
 // Usage example:
 
@@ -55,9 +38,6 @@ $driverOptions = [
     // Add additional driver options here if needed
 ];
 
-$databaseConnection = new DatabaseConnection($host, $username, $password, $database, $charset, $driverOptions);
-$pdo = $databaseConnection->getPdo();
+$pdo = DatabaseConnection::connect($host, $username, $password, $database, $charset, $driverOptions);
 
 // Now you can use $pdo to perform various database operations using PDO.
-
-?>
