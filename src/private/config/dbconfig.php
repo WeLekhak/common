@@ -58,7 +58,7 @@ $driverOptions = [
 ];
 
 $databaseConnection = new DatabaseConnection($host, $username, $password, $database, $charset, $driverOptions);
-$pdo = $databaseConnection->getPdo();
+$pdo = $DatabaseConnection->getPdo();
 
 // Now you can use $pdo to perform various database operations using PDO.
 
