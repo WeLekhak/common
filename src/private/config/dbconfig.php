@@ -14,6 +14,7 @@ class DatabaseConnection {
         $password,
         $database,
         $charset = 'utf8',
+        
         $driverOptions = [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
@@ -43,6 +44,8 @@ class DatabaseConnection {
     }
 }
 
+
+
 // Usage example:
 
 $host = 'your_database_host';
@@ -60,3 +63,4 @@ $pdo = $databaseConnection->getPdo();
 // Now you can use $pdo to perform various database operations using PDO.
 
 ?>
+
