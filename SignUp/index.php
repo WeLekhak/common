@@ -135,7 +135,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         // Bind values to the placeholders
         $stmt->bindValue(':lekhak_firstname', $input__firstname);
         $stmt->bindValue(':lekhak_lastname', $input__lastname);
-        $stmt->bindValue(':lekhak_mobileno', $input__mobile);
+        $stmt->bindValue(':lekhak_mobile_number', $input__mobile);
         $stmt->bindValue(':lekhak_email', $input__email);
         $stmt->bindValue(':lekhak_password', password_hash($input__password, PASSWORD_DEFAULT));
 
