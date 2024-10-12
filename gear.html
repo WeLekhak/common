@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Gear with JavaScript</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            flex-direction: column;
+        }
+
+        .gear {
+            width: 100px;
+            height: 100px;
+            background: #666;
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .gear-tooth {
+            position: absolute;
+            background: #666;
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+
+        /* Optional: Animation */
+        @keyframes rotateGear {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .gear {
+            animation: rotateGear 5s linear infinite;
+        }
+
+        #controls {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="gear" id="gear"></div>
+
+    <div id="controls">
+        <label for="teeth">Number of Teeth:</label>
+        <input type="number" id="teeth" value="8" min="4" max="20" step="1">
+        <button onclick="createGear()">Generate Gear</button>
+    </div>
+
+    <script>
+        function createGear() {
+            const gear = document.getElementById('gear');
+            const numberOfTeeth = document.getElementById('teeth').value;
+
+            // Clear existing teeth
+            gear.innerHTML = '';
+
+            // Gear size and radius
+            const gearRadius = 50; // half of the width/height of the .gear element
+            const toothWidth = 20;
+            const toothHeight = 20;
+            const toothDistance = 30; // Distance from center of gear to center of tooth (adjust for correct placement)
+
+            for (let i = 0; i < numberOfTeeth; i++) {
+                const angle = (i / numberOfTeeth) * 360;
+                const radians = (angle * Math.PI) / 180;
+
+                const x = Math.cos(radians) * (gearRadius + toothDistance) + gearRadius - toothWidth / 2;
+                const y = Math.sin(radians) * (gearRadius + toothDistance) + gearRadius - toothHeight / 2;
+
+                const tooth = document.createElement('div');
+                tooth.classList.add('gear-tooth');
+                tooth.style.transform = `rotate(${angle}deg)`;
+                tooth.style.left = `${x}px`;
+                tooth.style.top = `${y}px`;
+
+                gear.appendChild(tooth);
+            }
+        }
+
+        // Initial gear creation
+        createGear();
+    </script>
+</body>
+</html>

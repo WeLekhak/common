@@ -1,0 +1,54 @@
+RewriteEngine On
+RewriteBase /
+
+# Force HTTPS
+RewriteCond %{HTTPS} !=on
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Allow existing files and directories
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# 1. Redirect /profile/index.php?username=username&category=stories to /username/stories
+RewriteCond %{THE_REQUEST} \s/profile/index\.php\?username=([^&]+)&category=(stories|poetry|poems|articles|quotes)
+RewriteRule ^ /%1/%2? [R=301,L]
+
+# 2. Rewrite URLs like /username to /profile/index.php?username=username
+RewriteRule ^([^/]+)$ /profile/index.php?username=$1 [L,QSA]
+
+# 3. Rewrite URLs like /username/allowed-category to /profile/index.php?username=username&category=category
+RewriteRule ^([^/]+)/(stories|poetry|poems|articles)$ /profile/index.php?username=$1&category=$2 [L,QSA]
+
+# 4. Rewrite URLs like /genres/genrename to /genres/index.php?genre=genrename
+RewriteRule ^genres/([^/]+)$ /genres/index.php?genre=$1 [L,QSA]
+
+# 5. Redirect /posts/index.php?post=123 to /language/categories/username/postid (optional as needed)
+RewriteCond %{THE_REQUEST} \s/posts/index\.php\?post=([0-9]+)
+RewriteRule ^ /posts/%1? [R=301,L]
+
+# 6. Rewrite URLs like /page/1 to /?page=1
+RewriteRule ^page/([0-9]+)$ /?page=$1 [L,QSA]
+
+# 7. Rewrite URLs like /language/categories/username/lowercase-alphanumeric-postid to /posts/index.php?post=postid
+RewriteRule ^(english|hindi|marathi)/(stories|poetry|poems)/([^/]+)/([a-z0-9]+)$ /posts/index.php?post=$4 [L,QSA]
+
+# 8. Redirect everything else to index.php with the full URL as a query
+RewriteCond %{REQUEST_URI} !^/index\.php$
+RewriteCond %{REQUEST_URI} !^/profile/index\.php$
+RewriteCond %{REQUEST_URI} !^/genres/index\.php$
+RewriteCond %{REQUEST_URI} !^/page/[0-9]+$
+RewriteRule ^(.*)$ /index.php?query=$1 [L,QSA]
+
+# Fallback: Redirect everything to index.php
+RewriteRule ^.*$ /index.php [L]
+
+# Custom error pages
+ErrorDocument 400 /errorpages/400.php
+ErrorDocument 401 /errorpages/401.php
+ErrorDocument 403 /errorpages/403.php
+ErrorDocument 404 /errorpages/404.php
+ErrorDocument 500 /errorpages/500.php
+ErrorDocument 502 /errorpages/502.php
+ErrorDocument 503 /errorpages/503.php
+ErrorDocument 504 /errorpages/504.php
